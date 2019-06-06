@@ -1,0 +1,28 @@
+version: '2.3'
+
+services:
+  cube_redis:
+    image: redis
+    container_name: cube_redis
+    ports:
+      - "6379"
+    healthcheck:
+      test: "/usr/local/bin/redis-cli ping"
+      interval: 5s
+      start_period: 10s
+      timeout: 4s
+      retries: 3
+  cube:
+    build:
+      context: .
+      args:
+        - NODE_ENV=production
+    environment:
+      - REDIS_URL=redis://cube_redis
+    env_file:
+      - ./.env
+    ports:
+      - "4000:4000"
+  depends_on:
+      cube_redis:
+        condition: service_healthy

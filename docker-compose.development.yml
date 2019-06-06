@@ -1,0 +1,71 @@
+version: '2.3'
+
+services:
+  cube_redis:
+    image: redis
+    container_name: cube_redis
+    ports:
+      - "6379"
+    healthcheck:
+      test: "/usr/local/bin/redis-cli ping"
+      interval: 5s
+      start_period: 10s
+      timeout: 4s
+      retries: 3
+  cube_mysql:
+    image: mysql:5.7
+    container_name: cube_mysql
+    ports: 
+      - "3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=example
+      - MYSQL_DATABASE=db_cubejs_test
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=example --execute \"SHOW DATABASES;\""
+      interval: 5s
+      start_period: 10s
+      timeout: 4s
+      retries: 3
+  cube:
+    build: 
+      context: .
+      args:
+        - NODE_ENV=development
+    command: ../node_modules/.bin/nodemon -s js,env --inspect=0.0.0.0:9229 index.js
+    restart: always
+    environment:
+      - CUBEJS_DB_HOST=cube_mysql
+      - CUBEJS_DB_PORT=3306
+      - CUBEJS_DB_TYPE=mysql
+      - CUBEJS_DB_USER=root
+      - CUBEJS_DB_PASS=example
+      - CUBEJS_DB_NAME=db_cubejs_test
+      - REDIS_URL=redis://cube_redis
+    env_file:
+      - ./.env
+    ports:
+      - "4000:4000"
+      - "9229:9229"
+    volumes:
+      - .:/opt/app:delegated
+      # bind-mounting these two files in will let you add packages during development without rebuilding
+      # for example, to add bower to your app while developing, just install it inside the container
+      # and then nodemon will restart. Your changes will last until you "docker-compose down" and will
+      # be saved on host for next build
+      # docker-compose exec node npm install --save bower
+      - ./package.json:/opt/package.json
+      - ./package-lock.json:/opt/package-lock.json
+      # this is a workaround to prevent host node_modules from accidently getting mounted in container
+      # in case you want to use node/npm both outside container for test/lint etc. and also inside container
+      # this will overwrite the default node_modules dir in container so it won't conflict with our
+      # /opt/node_modules location.
+      - notused:/opt/app/node_modules
+    depends_on:
+      cube_redis:
+        condition: service_healthy
+      cube_mysql:
+        condition: service_healthy
+volumes:
+  notused:
