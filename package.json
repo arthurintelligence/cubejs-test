@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "e2e": "jest --testPathPattern=__e2e__/*.test.js",
+    "e2e": "jest --testPathPattern=__e2e__/.*.test.js",
     "e2ew": "jest --watch --testPathPattern=__e2e__/.*\\.test\\.js",
     "test": "jest --testPathPattern=__tests__/.*\\.test\\.js",
     "watch": "jest --watch --testPathPattern=__tests__/.*\\.test\\.js"
