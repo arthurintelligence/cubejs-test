@@ -19,8 +19,6 @@ your configuration to production.
 ### 0. Prerequisites
 
 In order to run this suite, you need to have `git`, `docker`, `docker-compose` and `npm/node` installed.
-Original tests run using async/await without prior transpilation, hence it is preferable to use
-`node >=10` in order to run the tests, or to rewrite the tests as necessary.
 
 ### 1. Clone this repository
 
@@ -76,11 +74,13 @@ For watch options, use `npm run watch`.
 
 ### Integration Testing
 
-You can test your schemas in action using the e2e testing suite. 
+You can test your schemas in action using the e2e testing suite. The schema tests work by
+creating and then removing tables in the test database, before and after making the call to the 
+cubejsApi.
 
-Integration tests are located under the `__e2e__` directory and must have the `.test.js` extension.\
+Integration tests are located under the `__e2e__` directory and must have the `.test.js` extension.
 
-#### Fixtures
+#### Available Fixtures
 
 #### `__e2e__/__fixtures__/cube`
 

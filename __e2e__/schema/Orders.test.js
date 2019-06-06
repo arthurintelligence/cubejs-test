@@ -2,12 +2,11 @@ require('dotenv').config();
 const cube = require('../__fixtures__/cube');
 const db = require('../__fixtures__/database');
 
-var DB_NAME;
 var cubejsApi;
 
-beforeAll(async () => {
+beforeAll(() => {
   cubejsApi = cube();
-  await db.query(`
+  return db.query(`
     CREATE TABLE IF NOT EXISTS ${process.env.CUBEJS_DB_NAME}.Orders (
       id INT,
       status VARCHAR(10) NOT NULL,
@@ -27,8 +26,8 @@ beforeAll(async () => {
   `);
 });
 
-afterAll(async () => {
-  await db.query(`DROP TABLE ${process.env.CUBEJS_DB_NAME}.Orders;`);
+afterAll(
+  () => db.query(`DROP TABLE ${process.env.CUBEJS_DB_NAME}.Orders;`);
 });
 
 test('should return the correct totalAmounts', async () => {
