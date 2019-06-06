@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@cubejs-backend/mysql-driver": "^0.9.4",
-    "@cubejs-backend/server": "^0.9.12"
+    "@cubejs-backend/server": "^0.9.13"
   },
   "devDependencies": {
     "@cubejs-client/core": "^0.9.12",
