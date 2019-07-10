@@ -1,6 +1,18 @@
-version: '2.3'
+version: "2.3"
 
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: cube_nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/error.log:/etc/nginx/error_log.log
+      - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - cube
   cube_redis:
     image: redis
     container_name: cube_redis
@@ -13,6 +25,7 @@ services:
       timeout: 4s
       retries: 3
   cube:
+    container_name: cube
     build:
       context: .
       args:
@@ -21,8 +34,10 @@ services:
       - REDIS_URL=redis://cube_redis
     env_file:
       - ./.env
+      - ./.env.production
+      - ./.env.production.local
     ports:
-      - "4000:4000"
-  depends_on:
+      - "4000"
+    depends_on:
       cube_redis:
         condition: service_healthy

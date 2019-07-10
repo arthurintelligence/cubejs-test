@@ -1,4 +1,4 @@
-version: '2.3'
+version: "2.3"
 
 services:
   cube_redis:
@@ -6,34 +6,21 @@ services:
     container_name: cube_redis
     ports:
       - "6379"
-    healthcheck:
-      test: "/usr/local/bin/redis-cli ping"
-      interval: 5s
-      start_period: 10s
-      timeout: 4s
-      retries: 3
   cube_mysql:
     image: mysql:5.7
     container_name: cube_mysql
-    ports: 
+    ports:
       - "3306"
     environment:
       - MYSQL_ROOT_PASSWORD=example
       - MYSQL_USER=root
       - MYSQL_PASSWORD=example
-      - MYSQL_DATABASE=db_cubejs_test
-    healthcheck:
-      test: "/usr/bin/mysql --user=root --password=example --execute \"SHOW DATABASES;\""
-      interval: 5s
-      start_period: 10s
-      timeout: 4s
-      retries: 3
   cube:
-    build: 
+    build:
       context: .
       args:
-        - NODE_ENV=development
-    command: ../node_modules/.bin/nodemon -s js,env --inspect=0.0.0.0:9229 index.js
+        - NODE_ENV=production
+    command: ../node_modules/.bin/nodemon -e js --ignore *.test.js --ignore scripts/* --ignore config/* --inspect=0.0.0.0:9222 index.js
     restart: always
     environment:
       - CUBEJS_DB_HOST=cube_mysql
@@ -41,13 +28,14 @@ services:
       - CUBEJS_DB_TYPE=mysql
       - CUBEJS_DB_USER=root
       - CUBEJS_DB_PASS=example
-      - CUBEJS_DB_NAME=db_cubejs_test
       - REDIS_URL=redis://cube_redis
     env_file:
       - ./.env
+      - ./.env.${NODE_ENV:-development}
+      - ./.env.${NODE_ENV:-development}.local
     ports:
       - "4000:4000"
-      - "9229:9229"
+      - "9222:9222"
     volumes:
       - .:/opt/app:delegated
       # bind-mounting these two files in will let you add packages during development without rebuilding
@@ -63,9 +51,7 @@ services:
       # /opt/node_modules location.
       - notused:/opt/app/node_modules
     depends_on:
-      cube_redis:
-        condition: service_healthy
-      cube_mysql:
-        condition: service_healthy
+      - cube_redis
+      - cube_mysql
 volumes:
   notused:

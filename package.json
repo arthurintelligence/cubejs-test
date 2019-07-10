@@ -3,21 +3,23 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "e2e": "jest --testPathPattern=__e2e__/.*.test.js",
-    "e2ew": "jest --watch --testPathPattern=__e2e__/.*\\.test\\.js",
-    "test": "jest --testPathPattern=__tests__/.*\\.test\\.js",
-    "watch": "jest --watch --testPathPattern=__tests__/.*\\.test\\.js"
+    "e2e": "node scripts/test.js --testPathPattern=__e2e__/.*.test.js",
+    "test": "node scripts/test.js --testPathPattern=__tests__/.*\\.test\\.js"
   },
   "dependencies": {
     "@cubejs-backend/mysql-driver": "^0.9.4",
-    "@cubejs-backend/server": "^0.9.13"
+    "@cubejs-backend/server": "^0.9.13",
+    "nodemon": "^1.19.1"
   },
   "devDependencies": {
     "@cubejs-client/core": "^0.9.12",
     "bluebird": "^3.5.5",
     "dotenv": "^8.0.0",
+    "dotenv-expand": "^5.1.0",
+    "fs-extra": "^8.1.0",
+    "handlebars": "^4.1.2",
     "jest": "^24.8.0",
     "jsonwebtoken": "^8.5.1",
-    "nodemon": "^1.19.1"
+    "uuid": "^3.3.2"
   }
 }

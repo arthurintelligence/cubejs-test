@@ -8,9 +8,9 @@ logs
 npm-debug.log*
 
 ### Env files ###
-*.env
-.env
-.env/*.env
+.env.production.local
+.env.development.local
+.env.test.local
 
 # Runtime data
 pids
