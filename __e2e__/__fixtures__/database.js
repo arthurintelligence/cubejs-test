@@ -27,7 +27,7 @@ function query(sql) {
   const command = `docker exec cube_mysql /usr/bin/mysql \
     --user=${process.env.CUBEJS_DB_USER} \
     --password=${process.env.CUBEJS_DB_PASS} \
-    --execute \"${sql.replace(/\n\s+/g, " ")}\"\
+    --execute \"${sql.replace(/\n\s+/g, " ").replace(/\"/g, '\\"').replace(/\`/g, '\\`')}\"\
   `;
   return new Promise((resolve, reject) => {
     exec(command, (err, stdout, stderr) => {
@@ -50,8 +50,8 @@ async function createDatabase({ namespace, databaseName } = {}) {
         namespace
       ).replace(/-/g, '');
     await query(`
-      CREATE DATABASE IF NOT EXISTS ${databaseName};
-      USE ${databaseName};
+      CREATE DATABASE IF NOT EXISTS \`${databaseName}\`;
+      USE \`${databaseName}\`;
     `);
     return { databaseName, namespace };
   } catch (err) {

@@ -1,6 +1,6 @@
-USE {{databaseName}};
+USE `{{databaseName}}`;
 
-CREATE TABLE IF NOT EXISTS {{databaseName}}.Orders (
+CREATE TABLE IF NOT EXISTS `{{databaseName}}`.Orders (
   id INT,
   status VARCHAR(10) NOT NULL,
   amount INT NOT NULL

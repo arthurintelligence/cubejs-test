@@ -7,8 +7,8 @@
     "test": "node scripts/test.js --testPathPattern=__tests__/.*\\.test\\.js"
   },
   "dependencies": {
-    "@cubejs-backend/mysql-driver": "^0.9.4",
-    "@cubejs-backend/server": "^0.9.13",
+    "@cubejs-backend/mysql-driver": "^0.9.14",
+    "@cubejs-backend/server": "^0.9.24",
     "nodemon": "^1.19.1"
   },
   "devDependencies": {

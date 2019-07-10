@@ -6,9 +6,8 @@ const insertTemplate = handlebars("./Orders.insert.hbs.sql");
 var cubejsApi;
 var databaseName;
 
-
 beforeAll(async () => {
-  const result = await db.createDatabase({ databaseName: process.env.CUBEJS_DB_NAME});
+  const result = await db.createDatabase();
   databaseName = result.databaseName;
   cubejsApi = cube({ databaseName });
   return db.query(insertTemplate({ databaseName }));
